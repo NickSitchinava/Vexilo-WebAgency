@@ -2,11 +2,9 @@
 
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { ArrowUpRight, Check, Code2, Layout, TrendingUp, type LucideIcon } from "lucide-react";
-import { FlowSection } from "@/components/ui/story-scroll";
 import { BorderRotate } from "@/components/ui/animated-gradient-border";
 import type { ServiceItem } from "@/i18n/dictionaries";
 import { useServicesCursor } from "./ServicesCursor";
-import { useServicesParallax } from "./ServicesParallax";
 import styles from "./services.module.css";
 
 const serviceIcons: LucideIcon[] = [Code2, Layout, TrendingUp];
@@ -132,72 +130,62 @@ export function ServiceCard({
   learnMoreLabel: string;
 }) {
   const Icon = serviceIcons[index % serviceIcons.length];
-  const scrollProgress = useServicesParallax();
-  const backLayerY = useTransform(scrollProgress, [0, 1], [0, -70]);
-  const cardY = useTransform(scrollProgress, [0, 1], [0, -22]);
 
   return (
-    <FlowSection
-      aria-label={service.title}
-      style={{ backgroundColor: theme.stageBg, color: theme.stageInk }}
-    >
-      <div className={styles.stage}>
-        <div className={styles.composition}>
-          <motion.div className={styles.backLayer} style={{ y: backLayerY }}>
-            <span className={styles.iconBadge} aria-hidden="true">
-              <Icon size={26} strokeWidth={1.5} />
-            </span>
-            <h3 className={styles.title} itemProp="name" lang={locale}>
-              <span className={styles.cascadeWrap}>
-                <CascadeChars text={service.title} />
-              </span>
-            </h3>
-          </motion.div>
-
-          <motion.div className={styles.content} style={{ y: cardY, borderColor: theme.borderColors.primary }}>
-            <div className={styles.cardHeader}>
-              <span className={styles.cardLabel} style={{ color: theme.stageInkFaint }}>
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <LearnMoreButton
-                href={`/${locale}/services/${service.slug}`}
-                label={learnMoreLabel}
-                theme={theme}
-                locale={locale}
-              />
-            </div>
-
-            <p className={styles.cardText} style={{ color: theme.stageInk }} lang={locale}>
-              {service.description}
-            </p>
-            <p className={styles.cardDetails} style={{ color: theme.stageInkMuted }} lang={locale}>
-              {service.details}
-            </p>
-
-            <motion.ul
-              className={styles.cardFeatures}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={stagger}
-              lang={locale}
-            >
-              {service.features.map((feature) => (
-                <motion.li
-                  key={feature}
-                  className={styles.cardFeatureItem}
-                  style={{ color: theme.stageInkMuted }}
-                  variants={featureRow}
-                  transition={{ duration: 0.5, ease: EASE }}
-                >
-                  <Check size={14} strokeWidth={2.25} style={{ color: theme.stageInkFaint }} />
-                  <span>{feature}</span>
-                </motion.li>
-              ))}
-            </motion.ul>
-          </motion.div>
-        </div>
+    <div className={styles.composition}>
+      <div className={styles.backLayer}>
+        <span className={styles.iconBadge} aria-hidden="true">
+          <Icon size={26} strokeWidth={1.5} />
+        </span>
+        <h3 className={styles.title} itemProp="name" lang={locale}>
+          <span className={styles.cascadeWrap}>
+            <CascadeChars text={service.title} />
+          </span>
+        </h3>
       </div>
-    </FlowSection>
+
+      <div className={styles.content} style={{ borderColor: theme.borderColors.primary }}>
+        <div className={styles.cardHeader}>
+          <span className={styles.cardLabel} style={{ color: theme.stageInkFaint }}>
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <LearnMoreButton
+            href={`/${locale}/services/${service.slug}`}
+            label={learnMoreLabel}
+            theme={theme}
+            locale={locale}
+          />
+        </div>
+
+        <p className={styles.cardText} style={{ color: theme.stageInk }} lang={locale}>
+          {service.description}
+        </p>
+        <p className={styles.cardDetails} style={{ color: theme.stageInkMuted }} lang={locale}>
+          {service.details}
+        </p>
+
+        <motion.ul
+          className={styles.cardFeatures}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={stagger}
+          lang={locale}
+        >
+          {service.features.map((feature) => (
+            <motion.li
+              key={feature}
+              className={styles.cardFeatureItem}
+              style={{ color: theme.stageInkMuted }}
+              variants={featureRow}
+              transition={{ duration: 0.5, ease: EASE }}
+            >
+              <Check size={14} strokeWidth={2.25} style={{ color: theme.stageInkFaint }} />
+              <span>{feature}</span>
+            </motion.li>
+          ))}
+        </motion.ul>
+      </div>
+    </div>
   );
 }

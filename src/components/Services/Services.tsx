@@ -1,10 +1,8 @@
 "use client";
 
-import { motion, useTransform } from "framer-motion";
-import FlowArt from "@/components/ui/story-scroll";
+import FlowArt, { FlowSection } from "@/components/ui/story-scroll";
 import "@/components/ui/story-scroll-entry.css";
 import ServicesCursor from "./ServicesCursor";
-import ServicesParallax, { useServicesParallax } from "./ServicesParallax";
 import { ServiceCard, type ServiceCardTheme } from "./ServiceCard";
 import { dictionaries } from "@/i18n/dictionaries";
 import type { Locale } from "@/i18n/config";
@@ -40,41 +38,6 @@ const panelThemes: ServiceCardTheme[] = [
   },
 ];
 
-function ServicesProgressDot({
-  scrollProgress,
-  start,
-  end,
-}: {
-  scrollProgress: ReturnType<typeof useServicesParallax>;
-  start: number;
-  end: number;
-}) {
-  const fadeIn = useTransform(scrollProgress, [start - 0.001, start], [0.35, 1]);
-  const fadeOut = useTransform(scrollProgress, [end - 0.001, end], [1, 0.35]);
-  const dotOpacity = useTransform(() => Math.min(fadeIn.get(), fadeOut.get()));
-  return <motion.span className={styles.progressDot} style={{ opacity: dotOpacity }} />;
-}
-
-function ServicesProgress({ count }: { count: number }) {
-  const scrollProgress = useServicesParallax();
-  const fadeIn = useTransform(scrollProgress, [0, 0.02], [0, 1]);
-  const fadeOut = useTransform(scrollProgress, [0.98, 1], [1, 0]);
-  const opacity = useTransform(() => Math.min(fadeIn.get(), fadeOut.get()));
-
-  return (
-    <motion.div className={styles.progress} style={{ opacity }} aria-hidden="true">
-      {Array.from({ length: count }).map((_, dotIndex) => (
-        <ServicesProgressDot
-          key={dotIndex}
-          scrollProgress={scrollProgress}
-          start={dotIndex / count}
-          end={(dotIndex + 1) / count}
-        />
-      ))}
-    </motion.div>
-  );
-}
-
 export default function Services({ locale }: { locale: Locale }) {
   const t = dictionaries[locale].services;
 
@@ -98,21 +61,26 @@ export default function Services({ locale }: { locale: Locale }) {
       />
 
       <ServicesCursor>
-        <ServicesParallax>
-          <ServicesProgress count={t.items.length} />
-          <FlowArt aria-label={t.heading}>
-            {t.items.map((service, index) => (
-              <ServiceCard
+        <FlowArt aria-label={t.heading} rotateIn={false}>
+          {t.items.map((service, index) => {
+            const theme = panelThemes[index % panelThemes.length];
+            return (
+              <FlowSection
                 key={service.slug}
-                service={service}
-                index={index}
-                locale={locale}
-                theme={panelThemes[index % panelThemes.length]}
-                learnMoreLabel={t.cta}
-              />
-            ))}
-          </FlowArt>
-        </ServicesParallax>
+                aria-label={service.title}
+                style={{ backgroundColor: theme.stageBg, color: theme.stageInk }}
+              >
+                <ServiceCard
+                  service={service}
+                  index={index}
+                  locale={locale}
+                  theme={theme}
+                  learnMoreLabel={t.cta}
+                />
+              </FlowSection>
+            );
+          })}
+        </FlowArt>
       </ServicesCursor>
     </section>
   );

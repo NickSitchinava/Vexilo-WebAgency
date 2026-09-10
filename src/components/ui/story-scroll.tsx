@@ -46,6 +46,7 @@ export interface FlowArtProps {
   children: React.ReactNode;
   className?: string;
   'aria-label'?: string;
+  rotateIn?: boolean;
 }
 
 const childCount = (children: React.ReactNode) => React.Children.count(children);
@@ -54,6 +55,7 @@ const FlowArt: React.FC<FlowArtProps> = ({
   children,
   className,
   'aria-label': ariaLabel = 'Story scroll',
+  rotateIn = true,
 }) => {
   const containerRef = useRef<HTMLElement>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -83,7 +85,7 @@ const FlowArt: React.FC<FlowArtProps> = ({
         const inner = section.querySelector<HTMLElement>('.flow-art-container');
         if (!inner) return;
 
-        if (i > 0) {
+        if (i > 0 && rotateIn) {
           gsap.set(inner, { rotation: 30, transformOrigin: 'bottom left' });
           const tween = gsap.to(inner, {
             rotation: 0,
@@ -117,7 +119,7 @@ const FlowArt: React.FC<FlowArtProps> = ({
         triggers.forEach((t) => t.kill());
       };
     },
-    { scope: containerRef, dependencies: [childCount(children), reducedMotion] },
+    { scope: containerRef, dependencies: [childCount(children), reducedMotion, rotateIn] },
   );
 
   return (
