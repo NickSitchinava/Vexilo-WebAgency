@@ -7,7 +7,11 @@ import ProjectsPricingTransition from "@/components/Projects/ProjectsPricingTran
 import PricingCalculator from "@/components/PricingCalculator/PricingCalculator";
 import Contact from "@/components/Contact/Contact";
 import Footer from "@/components/Footer/Footer";
-import { locales, type Locale } from "@/i18n/config";
+import { locales, defaultLocale, type Locale } from "@/i18n/config";
+
+function resolveLocale(value: string): Locale {
+  return locales.includes(value as Locale) ? (value as Locale) : defaultLocale;
+}
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -16,9 +20,10 @@ export function generateStaticParams() {
 export default async function Home({
   params,
 }: {
-  params: Promise<{ locale: Locale }>;
+  params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
+  const { locale: rawLocale } = await params;
+  const locale = resolveLocale(rawLocale);
 
   return (
     <>

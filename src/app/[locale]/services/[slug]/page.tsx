@@ -4,9 +4,13 @@ import { ArrowLeft, Check } from "lucide-react";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import { Button } from "@/components/ui/Button/Button";
-import { locales, type Locale } from "@/i18n/config";
+import { locales, defaultLocale, type Locale } from "@/i18n/config";
 import { dictionaries } from "@/i18n/dictionaries";
 import styles from "./service-detail.module.css";
+
+function resolveLocale(value: string): Locale {
+  return locales.includes(value as Locale) ? (value as Locale) : defaultLocale;
+}
 
 export function generateStaticParams() {
   return locales.flatMap((locale) =>
@@ -20,9 +24,10 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: Locale; slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { locale, slug } = await params;
+  const { locale: rawLocale, slug } = await params;
+  const locale = resolveLocale(rawLocale);
   const service = dictionaries[locale].services.items.find((item) => item.slug === slug);
 
   if (!service) {
@@ -38,9 +43,10 @@ export async function generateMetadata({
 export default async function ServiceDetailPage({
   params,
 }: {
-  params: Promise<{ locale: Locale; slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { locale, slug } = await params;
+  const { locale: rawLocale, slug } = await params;
+  const locale = resolveLocale(rawLocale);
   const t = dictionaries[locale];
   const service = t.services.items.find((item) => item.slug === slug);
 
