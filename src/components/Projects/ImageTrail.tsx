@@ -33,6 +33,8 @@ interface ImageTrailProps {
   minDistance?: number;
   velocityDependentSpawn?: boolean;
   active?: boolean;
+  itemWidth?: number;
+  itemHeight?: number;
 }
 
 const IDLE_DELAY = 900;
@@ -40,6 +42,8 @@ const IDLE_PERIOD_X = 6200;
 const IDLE_PERIOD_Y = 5100;
 const IDLE_SPAWN_INTERVAL = 220;
 const IDLE_MIN_DISTANCE = 44;
+const DEFAULT_ITEM_WIDTH = 128;
+const DEFAULT_ITEM_HEIGHT = 88;
 
 interface TrailSlotHandle {
   trigger: (x: number, y: number, rotation: number, zIndex: number) => void;
@@ -48,10 +52,12 @@ interface TrailSlotHandle {
 interface TrailSlotProps {
   child: React.ReactNode;
   animationSequence: TrailAnimationSequence;
+  itemWidth: number;
+  itemHeight: number;
 }
 
 const TrailSlot = forwardRef<TrailSlotHandle, TrailSlotProps>(
-  ({ child, animationSequence }, ref) => {
+  ({ child, animationSequence, itemWidth, itemHeight }, ref) => {
     const [scope, animate] = useAnimate();
 
     useImperativeHandle(
@@ -63,22 +69,25 @@ const TrailSlot = forwardRef<TrailSlotHandle, TrailSlotProps>(
 
           node.style.zIndex = String(zIndex);
 
+          const offsetX = x - itemWidth / 2;
+          const offsetY = y - itemHeight / 2;
+
           const sequence = [
-            [node, { left: x, top: y, rotate: rotation, opacity: 1, scale: 0 }, { duration: 0 }],
+            [node, { left: offsetX, top: offsetY, rotate: rotation, opacity: 1, scale: 0 }, { duration: 0 }],
             ...animationSequence.map((segment) => [node, ...segment]),
           ] as AnimationSequence;
 
           animate(sequence);
         },
       }),
-      [animate, animationSequence]
+      [animate, animationSequence, itemWidth, itemHeight]
     );
 
     return (
       <motion.div
         ref={scope}
         className={styles.trailItem}
-        style={{ opacity: 0, scale: 0 }}
+        style={{ opacity: 0, scale: 0, width: itemWidth, height: itemHeight }}
       >
         {child}
       </motion.div>
@@ -99,6 +108,8 @@ const ImageTrail = ({
   interval = 100,
   minDistance = 40,
   active = true,
+  itemWidth = DEFAULT_ITEM_WIDTH,
+  itemHeight = DEFAULT_ITEM_HEIGHT,
 }: ImageTrailProps) => {
   const lastAddedTimeRef = useRef<number>(0);
   const { position: mousePosition } = useMouseVector(containerRef);
@@ -240,6 +251,8 @@ const ImageTrail = ({
           }}
           child={child}
           animationSequence={animationSequence}
+          itemWidth={itemWidth}
+          itemHeight={itemHeight}
         />
       ))}
     </div>
