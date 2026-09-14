@@ -64,11 +64,16 @@ export default function Hero({ locale }: { locale: Locale }) {
   const sectionRef = useRef<HTMLElement>(null);
 
   const headlineLines = t.headlineLines ?? [t.headlinePrefix + t.headlineEmphasis];
+  const trustLine =
+    locale === "ka"
+      ? "სანდო თბილისში მოქმედი ბიზნესებისთვის"
+      : "Trusted by service businesses across Georgia";
   const [fontSize, setFontSize] = useState<number | null>(null);
   const [lineWidths, setLineWidths] = useState<number[] | null>(null);
 
   useEffect(() => {
     let cancelled = false;
+    let resizeTimer: ReturnType<typeof setTimeout> | undefined;
 
     const recompute = () => {
       if (cancelled || typeof window === "undefined") return;
@@ -77,16 +82,22 @@ export default function Hero({ locale }: { locale: Locale }) {
       setLineWidths(measureLineWidths(headlineLines, size));
     };
 
+    const debouncedRecompute = () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(recompute, 150);
+    };
+
     if (document.fonts?.ready) {
       document.fonts.ready.then(recompute).catch(recompute);
     } else {
       recompute();
     }
 
-    window.addEventListener("resize", recompute);
+    window.addEventListener("resize", debouncedRecompute);
     return () => {
       cancelled = true;
-      window.removeEventListener("resize", recompute);
+      if (resizeTimer) clearTimeout(resizeTimer);
+      window.removeEventListener("resize", debouncedRecompute);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [headlineLines.join("|")]);
@@ -125,10 +136,13 @@ export default function Hero({ locale }: { locale: Locale }) {
             variants={fadeUp}
             transition={{ duration: 0.6, ease: EASE, delay: 0.05 }}
           >
+            <span className={styles.eyebrowMark} aria-hidden="true" />
+            <span className={styles.eyebrowBrand}>Flevio</span>
+            <span aria-hidden="true"> · </span>
             {t.eyebrow}
           </motion.span>
 
-          <motion.div
+          <motion.h1
             className={styles.headline}
             initial="hidden"
             animate={animate}
@@ -146,6 +160,16 @@ export default function Hero({ locale }: { locale: Locale }) {
                     height: lineHeightPx ? `${lineHeightPx}px` : undefined,
                   }}
                 >
+                  <span
+                    aria-hidden="true"
+                    className={`${styles.headlineFallback} ${ready ? styles.headlineFallbackReady : ""}`}
+                    style={{
+                      fontSize: fontSize ? `${fontSize}px` : undefined,
+                      opacity: ready ? 0 : 1,
+                    }}
+                  >
+                    {line}
+                  </span>
                   {ready && (
                     <MeshText
                       text={line}
@@ -163,7 +187,7 @@ export default function Hero({ locale }: { locale: Locale }) {
                 </div>
               );
             })}
-          </motion.div>
+          </motion.h1>
 
           <motion.p
             className={styles.subhead}
@@ -176,20 +200,17 @@ export default function Hero({ locale }: { locale: Locale }) {
             {t.subhead}
           </motion.p>
 
-          <motion.ul
-            className={styles.chips}
+          <motion.p
+            className={styles.trustLine}
             lang={locale}
             initial="hidden"
             animate={animate}
             variants={fadeUp}
             transition={{ duration: 0.7, ease: EASE, delay: 0.35 }}
           >
-            {t.chips.map((chip) => (
-              <li key={chip} className={styles.chip}>
-                {chip}
-              </li>
-            ))}
-          </motion.ul>
+            <span className={styles.trustDot} aria-hidden="true" />
+            <span className={styles.trustText}>{trustLine}</span>
+          </motion.p>
         </div>
 
         <motion.div
@@ -204,10 +225,10 @@ export default function Hero({ locale }: { locale: Locale }) {
             className={styles.primaryCta}
             style={
               {
-                "--btn-bg": "#111111",
-                "--btn-fg": "#f4f3f0",
-                "--btn-fill": "var(--color-accent)",
-                "--btn-fill-fg": "#111111",
+                "--btn-bg": "var(--color-accent)",
+                "--btn-fg": "#111111",
+                "--btn-fill": "#111111",
+                "--btn-fill-fg": "#f4f3f0",
               } as React.CSSProperties
             }
           >
@@ -218,9 +239,9 @@ export default function Hero({ locale }: { locale: Locale }) {
             className={styles.secondaryCta}
             style={
               {
-                "--btn-bg": "rgba(17,17,17,0.05)",
+                "--btn-bg": "rgba(255,255,255,0.72)",
                 "--btn-fg": "#111111",
-                "--btn-border": "1px solid rgba(17,17,17,0.14)",
+                "--btn-border": "1px solid rgba(17,17,17,0.16)",
                 "--btn-fill": "#111111",
                 "--btn-fill-fg": "#f4f3f0",
               } as React.CSSProperties

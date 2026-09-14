@@ -6,7 +6,7 @@
   height: 8px;
   margin: -4px 0 0 -4px;
   border-radius: 50%;
-  background: #e8232a;
+  background: var(--color-accent);
   box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.85);
   pointer-events: none;
   z-index: 5;
@@ -20,7 +20,7 @@
   height: 34px;
   margin: -17px 0 0 -17px;
   border-radius: 50%;
-  border: 1.5px solid rgba(232, 35, 42, 0.55);
+  border: 1.5px solid color-mix(in oklch, var(--color-accent) 55%, transparent);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
   pointer-events: none;
   z-index: 4;

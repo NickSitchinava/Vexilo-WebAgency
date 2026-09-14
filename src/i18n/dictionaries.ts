@@ -168,12 +168,13 @@ export interface Dictionary {
 export const dictionaries: Record<Locale, Dictionary> = {
   en: {
     meta: {
-      title: "Web Design & Development Agency in Tbilisi, Georgia | Nick Sitchinava",
+      title: "Flevio | Web Design & Development Agency in Tbilisi, Georgia",
       description:
-        "We design and build custom websites, landing pages, and web applications for businesses in Tbilisi, Georgia and worldwide. Fast, SEO-friendly, built to convert.",
+        "Flevio designs and builds custom websites, landing pages, and web applications for businesses in Tbilisi, Georgia and worldwide. Fast, SEO-friendly, built to convert.",
       ogDescription:
-        "Custom websites, landing pages, and web applications, designed and built in Tbilisi, Georgia for clients worldwide.",
+        "Flevio — custom websites, landing pages, and web applications, designed and built in Tbilisi, Georgia for clients worldwide.",
       keywords: [
+        "Flevio",
         "web design agency Tbilisi",
         "website development Georgia",
         "Tbilisi web developer",
@@ -445,12 +446,13 @@ export const dictionaries: Record<Locale, Dictionary> = {
   },
   ka: {
     meta: {
-      title: "ვებ დიზაინისა და დეველოპმენტის სააგენტო თბილისში | Nick Sitchinava",
+      title: "Flevio | ვებ დიზაინისა და დეველოპმენტის სააგენტო თბილისში",
       description:
-        "ჩვენ ვქმნით ვებსაიტებს, ლენდინგ გვერდებსა და ვებ აპლიკაციებს თბილისისა და მთელი მსოფლიოს ბიზნესებისთვის. სწრაფი, SEO-ზე მორგებული და კონვერტაციაზე ორიენტირებული გადაწყვეტილებები.",
+        "Flevio ქმნის ვებსაიტებს, ლენდინგ გვერდებსა და ვებ აპლიკაციებს თბილისისა და მთელი მსოფლიოს ბიზნესებისთვის. სწრაფი, SEO-ზე მორგებული და კონვერტაციაზე ორიენტირებული გადაწყვეტილებები.",
       ogDescription:
-        "ინდივიდუალური ვებსაიტები, ლენდინგ გვერდები და ვებ აპლიკაციები, შექმნილი თბილისში, საქართველოში, მსოფლიოს მასშტაბით მოქმედი კლიენტებისთვის.",
+        "Flevio — ინდივიდუალური ვებსაიტები, ლენდინგ გვერდები და ვებ აპლიკაციები, შექმნილი თბილისში, საქართველოში, მსოფლიოს მასშტაბით მოქმედი კლიენტებისთვის.",
       keywords: [
+        "Flevio",
         "ვებ დიზაინი თბილისი",
         "ვებსაიტის დამზადება საქართველო",
         "ვებ დეველოპერი თბილისი",
