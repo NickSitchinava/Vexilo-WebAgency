@@ -226,7 +226,7 @@ export default function Hero({ locale }: { locale: Locale }) {
             style={
               {
                 "--btn-bg": "var(--color-accent)",
-                "--btn-fg": "#111111",
+                "--btn-fg": "#ffffff",
                 "--btn-fill": "#111111",
                 "--btn-fill-fg": "#f4f3f0",
               } as React.CSSProperties

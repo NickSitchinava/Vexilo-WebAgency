@@ -331,11 +331,23 @@ export default function About({ locale = "en" }: AboutProps) {
               className={styles.statsTrack}
               variants={fadeUp}
               transition={{ duration: 0.6, ease: EASE }}
+              itemScope
+              itemType="https://schema.org/Organization"
             >
               <div className={styles.statsNumbers}>
                 {t.stats.map((stat) => (
-                  <span key={stat.label} className={styles.statCell}>
-                    <span className={styles.statNumber}>
+                  <span
+                    key={stat.label}
+                    className={styles.statCell}
+                    itemProp="additionalProperty"
+                    itemScope
+                    itemType="https://schema.org/PropertyValue"
+                  >
+                    <meta itemProp="name" content={stat.label} />
+                    <span
+                      className={styles.statNumber}
+                      itemProp={stat.kind === "count" ? "value" : undefined}
+                    >
                       {stat.kind === "count" ? (
                         <AnimatedCount stat={stat} active={hasEnteredView} reduceMotion={reduceMotion} />
                       ) : (
@@ -394,10 +406,10 @@ export default function About({ locale = "en" }: AboutProps) {
                 href="#contact"
                 style={
                   {
-                    "--btn-bg": "oklch(55% 0.18 290)",
-                    "--btn-fg": "#fff",
-                    "--btn-fill": "oklch(30% 0.14 290)",
-                    "--btn-fill-fg": "#fff",
+                    "--btn-bg": "var(--color-accent)",
+                    "--btn-fg": "#ffffff",
+                    "--btn-fill": "#111111",
+                    "--btn-fill-fg": "#f4f3f0",
                   } as React.CSSProperties
                 }
               >
@@ -411,7 +423,7 @@ export default function About({ locale = "en" }: AboutProps) {
           <div className={styles.visual} aria-hidden="true">
             {showEffects && (
               <Strands
-                colors={["#F97316", "#7C3AED", "#06B6D4"]}
+                colors={["#e8702a", "#f2a35c", "#ffcb8a"]}
                 count={isCompact ? 2 : 3}
                 speed={0.5}
                 amplitude={isCompact ? 0.72 : 1}

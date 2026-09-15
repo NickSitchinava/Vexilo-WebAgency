@@ -201,6 +201,8 @@ const buildPalette = (colors: string[]): number[][] => {
   return padded;
 };
 
+const colorsKey = (colors: string[]): string => colors.join('|');
+
 export default function Strands({
   colors = ['#FF4242', '#7C3AED', '#06B6D4', '#EAB308'],
   count = 3,
@@ -345,12 +347,19 @@ export default function Strands({
     resize();
 
     let animateId = 0;
+    let lastColorsKey = colorsKey(propsRef.current.colors);
     const update = (t: number) => {
       animateId = requestAnimationFrame(update);
       const current = propsRef.current;
+
+      const nextColorsKey = colorsKey(current.colors);
+      if (nextColorsKey !== lastColorsKey) {
+        program.uniforms.uColors.value = buildPalette(current.colors);
+        program.uniforms.uColorCount.value = Math.min(current.colors.length, MAX_COLORS);
+        lastColorsKey = nextColorsKey;
+      }
+
       program.uniforms.uTime.value = t * 0.001;
-      program.uniforms.uColors.value = buildPalette(current.colors);
-      program.uniforms.uColorCount.value = Math.min(current.colors.length, MAX_COLORS);
       program.uniforms.uStrandCount.value = Math.min(Math.max(Math.round(current.count), 1), MAX_STRANDS);
       program.uniforms.uSpeed.value = current.speed;
       program.uniforms.uAmplitude.value = current.amplitude;
